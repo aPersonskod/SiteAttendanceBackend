@@ -13,16 +13,19 @@ public static class Extensions
         services.AddCors(o =>
             o.AddPolicy("CorsPolicy", b =>
             {
-                b.AllowAnyMethod()
-                    .SetIsOriginAllowed(_ => true)
-                    .AllowAnyHeader()
-                    .AllowCredentials();
+                b.WithOrigins(
+                        "https://turoff.dev",
+                        "http://localhost:5173",
+                        "https://localhost:5173"
+                    )
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
             }));
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
         return services;
     }
-    
+
     public static IApplicationBuilder UseDefaultApi(this IApplicationBuilder app)
     {
         app.UseHttpsRedirection();
@@ -30,7 +33,7 @@ public static class Extensions
         app.UseExceptionHandler();
         return app;
     }
-    
+
     public static async Task ConfigureDbContext(this IApplicationBuilder app)
     {
         var logger = app.ApplicationServices.GetService<ILogger<Program>>();

@@ -34,6 +34,7 @@ public class ReportRepository(AppDbContext context) : IReportRepository
     public async Task<ReportDto> GetAllEntries()
     {
         var totalCount = await context.SiteViews.AsNoTracking().CountAsync();
+        var firstDate = await context.SiteViews.AsNoTracking().MinAsync(x => x.Date);
         if (totalCount == 0)
             return new ReportDto()
             {
@@ -48,6 +49,7 @@ public class ReportRepository(AppDbContext context) : IReportRepository
         return new ReportDto()
         {
             TotalViews = totalCount,
+            StartDate = firstDate,
             ReportEntries = reportEntries
         };
     }
@@ -77,6 +79,7 @@ public class ReportRepository(AppDbContext context) : IReportRepository
         return new ReportDto()
         {
             TotalViews = totalCount,
+            StartDate = startDate,
             ReportEntries = reportEntries
         };
     }
